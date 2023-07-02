@@ -8,28 +8,20 @@ async function updateData(contacts) {
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
 }
 
-async function listContacts() {
-  try {
+try {
+  async function listContacts() {
     const data = await fs.readFile(contactsPath);
     const contacts = JSON.parse(data);
     return contacts;
-  } catch (error) {
-    console.error(error);
   }
-}
 
-async function getContactById(contactId) {
-  try {
+  async function getContactById(contactId) {
     const contacts = await listContacts();
     const oneContact = contacts.find(({ id }) => id === contactId);
     return oneContact || null;
-  } catch (error) {
-    console.error(error);
   }
-}
 
-async function updateContactById(id, data) {
-  try {
+  async function updateContactById(id, data) {
     const contacts = await listContacts();
     const indexContact = contacts.findIndex((contact) => contact.id === id);
     if (indexContact === -1) {
@@ -38,13 +30,9 @@ async function updateContactById(id, data) {
     contacts[indexContact] = { id, ...data };
     updateData(contacts);
     return contacts[indexContact];
-  } catch (error) {
-    console.error(error);
   }
-}
 
-async function removeContact(contactId) {
-  try {
+  async function removeContact(contactId) {
     const contacts = await listContacts();
     const indexContact = contacts.findIndex(({ id }) => id === contactId);
     if (indexContact === -1) {
@@ -53,22 +41,18 @@ async function removeContact(contactId) {
     const [result] = contacts.splice(indexContact, 1);
     updateData(contacts);
     return result;
-  } catch (error) {
-    console.error(error);
   }
-}
 
-async function addContact(data) {
-  try {
+  async function addContact(data) {
     const contacts = await listContacts();
     const contactId = nanoid();
     const newContact = { id: contactId, ...data };
     contacts.push(newContact);
     updateData(contacts);
     return newContact;
-  } catch (error) {
-    console.error(error);
   }
+} catch (error) {
+  console.error(error);
 }
 
 module.exports = {
